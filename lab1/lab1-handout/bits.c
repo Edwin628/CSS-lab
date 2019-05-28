@@ -171,7 +171,7 @@ NOTES:
  *   Rating: 1
  */
 int lsbZero(int x) {
-	//
+	//因为左移时低位会补0，所以左移右移后能保证最低位一定为0
 	x=x>>1;
 	x=x<<1;
   return x;
@@ -185,6 +185,7 @@ int lsbZero(int x) {
  *   Rating: 2
  */
 int byteNot(int x, int n) {
+	//通过1的异或可以保证0变为1和1变为0
 	int m;
 	n=n<<3;
 	m=0xff<<n;
@@ -202,6 +203,8 @@ int byteNot(int x, int n) {
  *   Rating: 2 
  */
 int byteXor(int x, int y, int n) {
+	//首先取到比较位置，然后通过两者的异或来实现比较，两个!实现将结果限制在
+	//0与1之间
 	int m;
 	int val;
 	n=n<<3;
@@ -220,6 +223,7 @@ int byteXor(int x, int y, int n) {
  *   Rating: 3 
  */
 int logicalAnd(int x, int y) {
+	//判断x与y是否有一个为0即可，通过!将其转化
 	int m=!(!x)&!(!y);
   return m;
 }
@@ -230,6 +234,8 @@ int logicalAnd(int x, int y) {
  *   Rating: 3 
  */
 int logicalOr(int x, int y) {
+	//比较x与y各个位之间的或，如果结果不为0
+	//则说明其中必定有非零数
 	int val=!(!(x|y));
   return val;
 }
@@ -242,6 +248,8 @@ int logicalOr(int x, int y) {
  *   Rating: 3 
  */
 int rotateLeft(int x, int n) {
+	//通过mlow取待转移的高位地址，存至mhigh中
+	//然后将其通过移位至低位，再与原来的数转移后合并即可。
 	int m=0;
 	int mlow,nneg,mhigh;
 	m=~m;
@@ -263,6 +271,7 @@ int rotateLeft(int x, int n) {
  *   Rating: 4
  */
 int parityCheck(int x) {
+	//将高位与低位反复比较，即可达到两个1就消为0的效果
 	int m=x;
 	m=m>>16;
 	m=m^x;
@@ -291,6 +300,7 @@ int parityCheck(int x) {
  *   Rating: 2
  */
 int mul2OK(int x) {
+	//m为x*2的结果，溢出的条件是m与x的符号位不同
 	int m; 
 	m= x<<1;
 	m=m>>31;
@@ -309,6 +319,7 @@ int mul2OK(int x) {
  *   Rating: 2
  */
 int mult3div2(int x) {
+	//因为向零取整，根据m的符号位来进行加一操作
 	int m;
 	m=(x<<1)+x;
 	m=m+!(!(m>>31));
@@ -324,6 +335,7 @@ int mult3div2(int x) {
  *   Rating: 3
  */
 int subOK(int x, int y) {
+	//x与y符号位不同并且x与（x-y）符号位不同时则溢出
 	int m,dec,yneg;	
 	yneg=~y+1;
 	m=x+yneg;
@@ -351,6 +363,7 @@ int subOK(int x, int y) {
  *   Rating: 4
  */
 int absVal(int x) {
+	//通过截取最高位来判断正负的操作
 	int m=x>>31;
 	int xabs = ((~m)&x)+(m&(~x+1));//pay attention to the brackets
   return xabs;  //test this one in 32 bit machine
@@ -367,6 +380,7 @@ int absVal(int x) {
  *   Rating: 2
  */
 unsigned float_abs(unsigned uf) {
+	//最高位为符号位全部置零，超出范围则返回原值
 	unsigned m=~(1<<31);
 	m=m&uf;
 	if(m>0x7f800000) return uf;
@@ -386,6 +400,9 @@ unsigned float_abs(unsigned uf) {
  *   Rating: 4
  */
 int float_f2i(unsigned uf) {
+	//当阶码超出范围或者小于127则直接判定返回值
+	//然后因为表示时已经默认为右移了23位，所以通过比较150来
+	//判断真正的位置。
 	unsigned sf=(0x80000000&uf)>>31;
 	unsigned e=(uf&0x7f800000)>>23;
 	unsigned f=(uf&0x007fffff);
