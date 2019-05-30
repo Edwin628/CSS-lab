@@ -1,0 +1,250 @@
+Border relations with Canada have never been better.
+
+1 2 4 8 16 32
+
+0 854
+1 466
+2 711
+
+352 4
+264 3
+
+256789
+
+display /x $esp
+display /x $eax
+display /x $ebx
+display /x $ecx
+display /x $edx
+display /x $esi
+display /x $edi
+x/20x $esp
+1 2 4 8 16 32
+0 854
+1 466
+2 711
+
+
+352 4
+264 3
+
+08048b65 <phase_2>:
+ 8048b65:	56                   	push   %esi
+ 8048b66:	53                   	push   %ebx
+ 8048b67:	83 ec 2c             	sub    $0x2c,%esp
+ 8048b6a:	65 a1 14 00 00 00    	mov    %gs:0x14,%eax
+ 8048b70:	89 44 24 24          	mov    %eax,0x24(%esp)
+ 8048b74:	31 c0                	xor    %eax,%eax
+ 8048b76:	8d 44 24 0c          	lea    0xc(%esp),%eax
+ 8048b7a:	50                   	push   %eax
+ 8048b7b:	ff 74 24 3c          	pushl  0x3c(%esp)
+ 8048b7f:	e8 3c 05 00 00       	call   80490c0 <read_six_numbers>
+ 8048b84:	83 c4 10             	add    $0x10,%esp
+ 8048b87:	83 7c 24 04 01       	cmpl   $0x1,0x4(%esp)  ;第一个必须为1
+ 8048b8c:	74 05                	je     8048b93 <phase_2+0x2e>
+ 8048b8e:	e8 08 05 00 00       	call   804909b <explode_bomb>
+ 8048b93:	8d 5c 24 04          	lea    0x4(%esp),%ebx
+ 8048b97:	8d 74 24 18          	lea    0x18(%esp),%esi
+ 8048b9b:	eb 07                	jmp    8048ba4 <phase_2+0x3f>
+ 8048b9d:	83 c3 04             	add    $0x4,%ebx               ;b9d循环
+ 8048ba0:	39 f3                	cmp    %esi,%ebx              ;控制位置到末尾结束
+ 8048ba2:	74 10                	je     8048bb4 <phase_2+0x4f>
+ 8048ba4:	8b 03                	mov    (%ebx),%eax
+ 8048ba6:	01 c0                	add    %eax,%eax              ;前后相加即可
+ 8048ba8:	39 43 04             	cmp    %eax,0x4(%ebx)
+ 8048bab:	74 f0                	je     8048b9d <phase_2+0x38>  ;b9d循环
+ 8048bad:	e8 e9 04 00 00       	call   804909b <explode_bomb>
+ 8048bb2:	eb e9                	jmp    8048b9d <phase_2+0x38>
+ 8048bb4:	8b 44 24 1c          	mov    0x1c(%esp),%eax
+ 8048bb8:	65 33 05 14 00 00 00 	xor    %gs:0x14,%eax
+ 8048bbf:	75 06                	jne    8048bc7 <phase_2+0x62>
+ 8048bc1:	83 c4 24             	add    $0x24,%esp
+ 8048bc4:	5b                   	pop    %ebx
+ 8048bc5:	5e                   	pop    %esi
+ 8048bc6:	c3                   	ret    
+ 8048bc7:	e8 c4 fb ff ff       	call   8048790 <__stack_chk_fail@plt>
+
+08048bcc <phase_3>:
+ 8048bcc:	83 ec 1c             	sub    $0x1c,%esp
+ 8048bcf:	65 a1 14 00 00 00    	mov    %gs:0x14,%eax
+ 8048bd5:	89 44 24 0c          	mov    %eax,0xc(%esp)
+ 8048bd9:	31 c0                	xor    %eax,%eax
+ 8048bdb:	8d 44 24 08          	lea    0x8(%esp),%eax
+ 8048bdf:	50                   	push   %eax
+ 8048be0:	8d 44 24 08          	lea    0x8(%esp),%eax
+ 8048be4:	50                   	push   %eax
+ 8048be5:	68 8f a1 04 08       	push   $0x804a18f
+ 8048bea:	ff 74 24 2c          	pushl  0x2c(%esp)
+ 8048bee:	e8 1d fc ff ff       	call   8048810 <__isoc99_sscanf@plt>
+ 8048bf3:	83 c4 10             	add    $0x10,%esp
+ 8048bf6:	83 f8 01             	cmp    $0x1,%eax
+ 8048bf9:	7e 12                	jle    8048c0d <phase_3+0x41>
+ 8048bfb:	83 7c 24 04 07       	cmpl   $0x7,0x4(%esp)
+ 8048c00:	77 43                	ja     8048c45 <phase_3+0x79>
+ 8048c02:	8b 44 24 04          	mov    0x4(%esp),%eax
+ 8048c06:	ff 24 85 20 a0 04 08 	jmp    *0x804a020(,%eax,4)     ;跳转表
+ 8048c0d:	e8 89 04 00 00       	call   804909b <explode_bomb>
+ 8048c12:	eb e7                	jmp    8048bfb <phase_3+0x2f> 
+ 8048c14:	b8 d2 01 00 00       	mov    $0x1d2,%eax				;这往后依次从1开始
+ 8048c19:	eb 3b                	jmp    8048c56 <phase_3+0x8a>
+ 8048c1b:	b8 c7 02 00 00       	mov    $0x2c7,%eax
+ 8048c20:	eb 34                	jmp    8048c56 <phase_3+0x8a>
+ 8048c22:	b8 be 02 00 00       	mov    $0x2be,%eax
+ 8048c27:	eb 2d                	jmp    8048c56 <phase_3+0x8a>
+ 8048c29:	b8 7b 00 00 00       	mov    $0x7b,%eax
+ 8048c2e:	eb 26                	jmp    8048c56 <phase_3+0x8a>
+ 8048c30:	b8 48 03 00 00       	mov    $0x348,%eax
+ 8048c35:	eb 1f                	jmp    8048c56 <phase_3+0x8a>
+ 8048c37:	b8 ac 00 00 00       	mov    $0xac,%eax
+ 8048c3c:	eb 18                	jmp    8048c56 <phase_3+0x8a>
+ 8048c3e:	b8 38 03 00 00       	mov    $0x338,%eax
+ 8048c43:	eb 11                	jmp    8048c56 <phase_3+0x8a>
+ 8048c45:	e8 51 04 00 00       	call   804909b <explode_bomb>
+ 8048c4a:	b8 00 00 00 00       	mov    $0x0,%eax
+ 8048c4f:	eb 05                	jmp    8048c56 <phase_3+0x8a>
+ 8048c51:	b8 56 03 00 00       	mov    $0x356,%eax			;这是switch表中的0
+ 8048c56:	3b 44 24 08          	cmp    0x8(%esp),%eax
+ 8048c5a:	74 05                	je     8048c61 <phase_3+0x95>
+ 8048c5c:	e8 3a 04 00 00       	call   804909b <explode_bomb>
+ 8048c61:	8b 44 24 0c          	mov    0xc(%esp),%eax
+ 8048c65:	65 33 05 14 00 00 00 	xor    %gs:0x14,%eax
+ 8048c6c:	75 04                	jne    8048c72 <phase_3+0xa6>
+ 8048c6e:	83 c4 1c             	add    $0x1c,%esp
+ 8048c71:	c3                   	ret    
+ 8048c72:	e8 19 fb ff ff       	call   8048790 <__stack_chk_fail@plt>
+
+phase_5
+08048d2e <phase_5>:
+ 8048d2e:	53                   	push   %ebx
+ 8048d2f:	83 ec 14             	sub    $0x14,%esp
+ 8048d32:	8b 5c 24 1c          	mov    0x1c(%esp),%ebx
+ 8048d36:	53                   	push   %ebx
+ 8048d37:	e8 4b 02 00 00       	call   8048f87 <string_length>
+ 8048d3c:	83 c4 10             	add    $0x10,%esp
+ 8048d3f:	83 f8 06             	cmp    $0x6,%eax ;6个字符
+ 8048d42:	74 05                	je     8048d49 <phase_5+0x1b>
+ 8048d44:	e8 52 03 00 00       	call   804909b <explode_bomb>
+ 8048d49:	89 d8                	mov    %ebx,%eax 
+ 8048d4b:	83 c3 06             	add    $0x6,%ebx
+ 8048d4e:	b9 00 00 00 00       	mov    $0x0,%ecx
+ 8048d53:	0f b6 10             	movzbl (%eax),%edx ;将输入缓存区内容给edx
+ 8048d56:	83 e2 0f             	and    $0xf,%edx   ;将assic转化为数字
+ 8048d59:	03 0c 95 40 a0 04 08 	add    0x804a040(,%edx,4),%ecx ;edx由此看出为索引，0x804a040即为存放的数据区
+ 8048d60:	83 c0 01             	add    $0x1,%eax
+ 8048d63:	39 d8                	cmp    %ebx,%eax    ;ebx此时为6此处为控制循环阶段
+ 8048d65:	75 ec                	jne    8048d53 <phase_5+0x25>
+ 8048d67:	83 f9 2d             	cmp    $0x2d,%ecx  ;控制和为ecx
+ 8048d6a:	74 05                	je     8048d71 <phase_5+0x43>
+ 8048d6c:	e8 2a 03 00 00       	call   804909b <explode_bomb>
+ 8048d71:	83 c4 08             	add    $0x8,%esp
+ 8048d74:	5b                   	pop    %ebx
+ 8048d75:	c3                   	ret    
+数据区 2d--45
+1 2  3 4 5  6  7 8 9 10 11 12 13 14  15 16 //所有索引要减去1
+2 a  6 1 c  10 9 3 4 7  e  5  b  8   f  d
+2 10 6 1 12 16 9 3 4 7  14 5  11 8   15 13
+256789
+
+
+
+08048d76 <phase_6>:
+ 8048d76:	56                   	push   %esi
+ 8048d77:	53                   	push   %ebx
+ 8048d78:	83 ec 4c             	sub    $0x4c,%esp
+ 8048d7b:	65 a1 14 00 00 00    	mov    %gs:0x14,%eax
+ 8048d81:	89 44 24 44          	mov    %eax,0x44(%esp)
+ 8048d85:	31 c0                	xor    %eax,%eax
+ 8048d87:	8d 44 24 14          	lea    0x14(%esp),%eax
+ 8048d8b:	50                   	push   %eax
+ 8048d8c:	ff 74 24 5c          	pushl  0x5c(%esp)
+ 8048d90:	e8 2b 03 00 00       	call   80490c0 <read_six_numbers>
+ 8048d95:	83 c4 10             	add    $0x10,%esp
+ 8048d98:	be 00 00 00 00       	mov    $0x0,%esi
+ 8048d9d:	eb 1c                	jmp    8048dbb <phase_6+0x45>
+ 8048d9f:	83 c6 01             	add    $0x1,%esi
+ 8048da2:	83 fe 06             	cmp    $0x6,%esi             ;控制数的比较的结束
+ 8048da5:	74 2e                	je     8048dd5 <phase_6+0x5f>
+ 8048da7:	89 f3                	mov    %esi,%ebx
+ 8048da9:	8b 44 9c 0c          	mov    0xc(%esp,%ebx,4),%eax ;将输入的值赋给eax
+ 8048dad:	39 44 b4 08          	cmp    %eax,0x8(%esp,%esi,4) ;与第esi个数不能相等
+ 8048db1:	74 1b                	je     8048dce <phase_6+0x58>
+ 8048db3:	83 c3 01             	add    $0x1,%ebx
+ 8048db6:	83 fb 05             	cmp    $0x5,%ebx			;控制单轮数的比较结束
+ 8048db9:	7e ee                	jle    8048da9 <phase_6+0x33>
+ 8048dbb:	8b 44 b4 0c          	mov    0xc(%esp,%esi,4),%eax
+ 8048dbf:	83 e8 01             	sub    $0x1,%eax
+ 8048dc2:	83 f8 05             	cmp    $0x5,%eax			;下个待比较的数是否小于6
+ 8048dc5:	76 d8                	jbe    8048d9f <phase_6+0x29>
+ 8048dc7:	e8 cf 02 00 00       	call   804909b <explode_bomb>
+ 8048dcc:	eb d1                	jmp    8048d9f <phase_6+0x29>
+ 8048dce:	e8 c8 02 00 00       	call   804909b <explode_bomb>
+ 8048dd3:	eb de                	jmp    8048db3 <phase_6+0x3d>
+ 8048dd5:	bb 00 00 00 00       	mov    $0x0,%ebx
+ 8048dda:	89 de                	mov    %ebx,%esi		;dda循环
+ 8048ddc:	8b 4c 9c 0c          	mov    0xc(%esp,%ebx,4),%ecx  ；ecx取输入的第ebx个值
+ 8048de0:	b8 01 00 00 00       	mov    $0x1,%eax
+ 8048de5:	ba 3c c1 04 08       	mov    $0x804c13c,%edx   ;edx存放了读取数据段的地址
+ 8048dea:	83 f9 01             	cmp    $0x1,%ecx
+ 8048ded:	7e 0a                	jle    8048df9 <phase_6+0x83>
+ 8048def:	8b 52 08             	mov    0x8(%edx),%edx		   ;def循环
+ 8048df2:	83 c0 01             	add    $0x1,%eax
+ 8048df5:	39 c8                	cmp    %ecx,%eax
+ 8048df7:	75 f6                	jne    8048def <phase_6+0x79>  ;def循环
+ 8048df9:	89 54 b4 24          	mov    %edx,0x24(%esp,%esi,4)
+ 8048dfd:	83 c3 01             	add    $0x1,%ebx
+ 8048e00:	83 fb 06             	cmp    $0x6,%ebx
+ 8048e03:	75 d5                	jne    8048dda <phase_6+0x64> ;dda循环，感觉又是一个索引性质的
+;0x0804c148 存放输入数字对应的在0x0804c148内存块的地址
+ 8048e05:	8b 5c 24 24          	mov    0x24(%esp),%ebx
+ 8048e09:	89 d9                	mov    %ebx,%ecx
+ 8048e0b:	b8 01 00 00 00       	mov    $0x1,%eax
+ 8048e10:	8b 54 84 24          	mov    0x24(%esp,%eax,4),%edx
+ 8048e14:	89 51 08             	mov    %edx,0x8(%ecx)
+ 8048e17:	83 c0 01             	add    $0x1,%eax
+ 8048e1a:	89 d1                	mov    %edx,%ecx
+ 8048e1c:	83 f8 06             	cmp    $0x6,%eax
+ 8048e1f:	75 ef                	jne    8048e10 <phase_6+0x9a>
+ 8048e21:	c7 42 08 00 00 00 00 	movl   $0x0,0x8(%edx)
+ 8048e28:	be 05 00 00 00       	mov    $0x5,%esi
+ 8048e2d:	eb 08                	jmp    8048e37 <phase_6+0xc1>
+ 8048e2f:	8b 5b 08             	mov    0x8(%ebx),%ebx
+ 8048e32:	83 ee 01             	sub    $0x1,%esi
+ 8048e35:	74 10                	je     8048e47 <phase_6+0xd1>
+ 8048e37:	8b 43 08             	mov    0x8(%ebx),%eax
+ 8048e3a:	8b 00                	mov    (%eax),%eax
+ 8048e3c:	39 03                	cmp    %eax,(%ebx)
+ 8048e3e:	7d ef                	jge    8048e2f <phase_6+0xb9>
+ 8048e40:	e8 56 02 00 00       	call   804909b <explode_bomb>
+ 8048e45:	eb e8                	jmp    8048e2f <phase_6+0xb9>
+ 8048e47:	8b 44 24 3c          	mov    0x3c(%esp),%eax
+ 8048e4b:	65 33 05 14 00 00 00 	xor    %gs:0x14,%eax
+ 8048e52:	75 06                	jne    8048e5a <phase_6+0xe4>
+ 8048e54:	83 c4 44             	add    $0x44,%esp
+ 8048e57:	5b                   	pop    %ebx
+ 8048e58:	5e                   	pop    %esi
+ 8048e59:	c3                   	ret    
+ 8048e5a:	e8 31 f9 ff ff       	call   8048790 <__stack_chk_fail@plt>
+ 
+ 
+0x804c13c <node1>:	0x00000354#4#	0x00000001	0x0804c148**2**	0x000003b7#1#
+0x804c14c <node2+4>:	0x00000002	0x0804c154**3**	0x00000387#3#	0x00000003
+0x804c15c <node3+8>:	0x0804c160	0x0000038c#2#	0x00000004	0x0804c16c
+0x804c16c <node5>:	0x000001d2#5#	0x00000005	0x0804c178	0x00000177#6#
+0x804c17c <node6+4>:	0x00000006	0x00000000	0x0c05eb50	0x00000000
+3 6 4 5 2 1
+4 1 3 2 5 6
+6 5 1 3 4 2
+2 4 3 1 5 6 //正确答案
+输入的数字对应着第几个值，必须按从大到小的顺序排列
+(gdb) x/20x 0x804c13c
+0x804c13c <node1>:	0x00000354	0x00000001	0x0804c178	0x000003b7
+0x804c14c <node2+4>:	0x00000002	0x0804c160	0x00000387	0x00000003
+0x804c15c <node3+8>:	0x0804c148	0x0000038c	0x00000004	0x0804c16c
+0x804c16c <node5>:	0x000001d2	0x00000005	0x0804c13c	0x00000177
+0x804c17c <node6+4>:	0x00000006	0x00000000	0x0c05eb50	0x00000000
+(gdb) x/20x $esp
+0xbfffeeb0:	0xb7e76dd7	0xb7fbe000	0xb7e31325	0x00000003
+0xbfffeec0:	0x00000002	0x00000004	0x00000005	0x00000001
+0xbfffeed0:	0x00000006	0x0804c154	0x0804c148	0x0804c160
+0xbfffeee0:	0x0804c16c	0x0804c13c	0x0804c178	0x13ee6d00
+0xbfffeef0:	0xbfffefc4	0xbfffefc4	0xb7fbe000	0x08048ae2
