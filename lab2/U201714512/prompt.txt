@@ -6,6 +6,9 @@ Border relations with Canada have never been better.
 1 466
 2 711
 
+
+DrEvil
+
 352 4
 264 3
 
@@ -113,6 +116,75 @@ x/20x $esp
  8048c71:	c3                   	ret    
  8048c72:	e8 19 fb ff ff       	call   8048790 <__stack_chk_fail@plt>
 
+08048c77 <func4>:
+ 8048c77:	57                   	push   %edi
+ 8048c78:	56                   	push   %esi
+ 8048c79:	53                   	push   %ebx
+ 8048c7a:	8b 5c 24 10          	mov    0x10(%esp),%ebx  ;接收传入的第一个9
+ 8048c7e:	8b 7c 24 14          	mov    0x14(%esp),%edi	;接收传入的第二个参数
+ 8048c82:	85 db                	test   %ebx,%ebx
+ 8048c84:	7e 2d                	jle    8048cb3 <func4+0x3c>
+ 8048c86:	89 f8                	mov    %edi,%eax
+ 8048c88:	83 fb 01             	cmp    $0x1,%ebx
+ 8048c8b:	74 22                	je     8048caf <func4+0x38>
+ 8048c8d:	83 ec 08             	sub    $0x8,%esp
+ 8048c90:	57                   	push   %edi
+ 8048c91:	8d 43 ff             	lea    -0x1(%ebx),%eax   ;第一次的话eax赋值为8
+ 8048c94:	50                   	push   %eax
+ 8048c95:	e8 dd ff ff ff       	call   8048c77 <func4>
+ 8048c9a:	83 c4 08             	add    $0x8,%esp
+ 8048c9d:	8d 34 07             	lea    (%edi,%eax,1),%esi
+ 8048ca0:	57                   	push   %edi
+ 8048ca1:	83 eb 02             	sub    $0x2,%ebx
+ 8048ca4:	53                   	push   %ebx
+ 8048ca5:	e8 cd ff ff ff       	call   8048c77 <func4>
+ 8048caa:	83 c4 10             	add    $0x10,%esp   
+ 8048cad:	01 f0                	add    %esi,%eax	;将两个分支相加
+ 8048caf:	5b                   	pop    %ebx
+ 8048cb0:	5e                   	pop    %esi
+ 8048cb1:	5f                   	pop    %edi
+ 8048cb2:	c3                   	ret    
+ 8048cb3:	b8 00 00 00 00       	mov    $0x0,%eax
+ 8048cb8:	eb f5                	jmp    8048caf <func4+0x38>
+
+
+08048cba <phase_4>:
+ 8048cba:	83 ec 1c             	sub    $0x1c,%esp
+ 8048cbd:	65 a1 14 00 00 00    	mov    %gs:0x14,%eax
+ 8048cc3:	89 44 24 0c          	mov    %eax,0xc(%esp)
+ 8048cc7:	31 c0                	xor    %eax,%eax
+ 8048cc9:	8d 44 24 04          	lea    0x4(%esp),%eax
+ 8048ccd:	50                   	push   %eax
+ 8048cce:	8d 44 24 0c          	lea    0xc(%esp),%eax
+ 8048cd2:	50                   	push   %eax
+ 8048cd3:	68 8f a1 04 08       	push   $0x804a18f
+ 8048cd8:	ff 74 24 2c          	pushl  0x2c(%esp)
+ 8048cdc:	e8 2f fb ff ff       	call   8048810 <__isoc99_sscanf@plt>
+ 8048ce1:	83 c4 10             	add    $0x10,%esp
+ 8048ce4:	83 f8 02             	cmp    $0x2,%eax
+ 8048ce7:	74 32                	je     8048d1b <phase_4+0x61>
+ 8048ce9:	e8 ad 03 00 00       	call   804909b <explode_bomb>
+ 8048cee:	83 ec 08             	sub    $0x8,%esp
+ 8048cf1:	ff 74 24 0c          	pushl  0xc(%esp)
+ 8048cf5:	6a 09                	push   $0x9
+ 8048cf7:	e8 7b ff ff ff       	call   8048c77 <func4>
+ 8048cfc:	83 c4 10             	add    $0x10,%esp
+ 8048cff:	3b 44 24 08          	cmp    0x8(%esp),%eax
+ 8048d03:	74 05                	je     8048d0a <phase_4+0x50>
+ 8048d05:	e8 91 03 00 00       	call   804909b <explode_bomb>
+ 8048d0a:	8b 44 24 0c          	mov    0xc(%esp),%eax
+ 8048d0e:	65 33 05 14 00 00 00 	xor    %gs:0x14,%eax
+ 8048d15:	75 12                	jne    8048d29 <phase_4+0x6f>
+ 8048d17:	83 c4 1c             	add    $0x1c,%esp
+ 8048d1a:	c3                   	ret    
+ 8048d1b:	8b 44 24 04          	mov    0x4(%esp),%eax
+ 8048d1f:	83 e8 02             	sub    $0x2,%eax
+ 8048d22:	83 f8 02             	cmp    $0x2,%eax
+ 8048d25:	76 c7                	jbe    8048cee <phase_4+0x34>
+ 8048d27:	eb c0                	jmp    8048ce9 <phase_4+0x2f>
+ 8048d29:	e8 62 fa ff ff       	call   8048790 <__stack_chk_fail@plt>
+ 
+
 phase_5
 08048d2e <phase_5>:
  8048d2e:	53                   	push   %ebx
@@ -203,7 +275,7 @@ phase_5
  8048e17:	83 c0 01             	add    $0x1,%eax
  8048e1a:	89 d1                	mov    %edx,%ecx
  8048e1c:	83 f8 06             	cmp    $0x6,%eax
- 8048e1f:	75 ef                	jne    8048e10 <phase_6+0x9a>
+ 8048e1f:	75 ef                	jne    8048e10 <phase_6+0x9a> ;这循环感觉没什么用啊
  8048e21:	c7 42 08 00 00 00 00 	movl   $0x0,0x8(%edx)
  8048e28:	be 05 00 00 00       	mov    $0x5,%esi
  8048e2d:	eb 08                	jmp    8048e37 <phase_6+0xc1>
@@ -248,3 +320,118 @@ phase_5
 0xbfffeed0:	0x00000006	0x0804c154	0x0804c148	0x0804c160
 0xbfffeee0:	0x0804c16c	0x0804c13c	0x0804c178	0x13ee6d00
 0xbfffeef0:	0xbfffefc4	0xbfffefc4	0xb7fbe000	0x08048ae2
+
+
+
+080491fa <phase_defused>:
+ 80491fa:	83 ec 6c             	sub    $0x6c,%esp
+ 80491fd:	65 a1 14 00 00 00    	mov    %gs:0x14,%eax
+ 8049203:	89 44 24 5c          	mov    %eax,0x5c(%esp)
+ 8049207:	31 c0                	xor    %eax,%eax
+ 8049209:	83 3d cc c3 04 08 06 	cmpl   $0x6,0x804c3cc
+ 8049210:	74 11                	je     8049223 <phase_defused+0x29>
+ 8049212:	8b 44 24 5c          	mov    0x5c(%esp),%eax
+ 8049216:	65 33 05 14 00 00 00 	xor    %gs:0x14,%eax
+ 804921d:	75 7b                	jne    804929a <phase_defused+0xa0>
+ 804921f:	83 c4 6c             	add    $0x6c,%esp
+ 8049222:	c3                   	ret    
+ 8049223:	83 ec 0c             	sub    $0xc,%esp
+ 8049226:	8d 44 24 18          	lea    0x18(%esp),%eax
+ 804922a:	50                   	push   %eax
+ 804922b:	8d 44 24 18          	lea    0x18(%esp),%eax
+ 804922f:	50                   	push   %eax
+ 8049230:	8d 44 24 18          	lea    0x18(%esp),%eax
+ 8049234:	50                   	push   %eax
+ 8049235:	68 e9 a1 04 08       	push   $0x804a1e9
+ 804923a:	68 d0 c4 04 08       	push   $0x804c4d0
+ 804923f:	e8 cc f5 ff ff       	call   8048810 <__isoc99_sscanf@plt>
+ 8049244:	83 c4 20             	add    $0x20,%esp
+ 8049247:	83 f8 03             	cmp    $0x3,%eax
+ 804924a:	74 12                	je     804925e <phase_defused+0x64>
+ 804924c:	83 ec 0c             	sub    $0xc,%esp
+ 804924f:	68 18 a1 04 08       	push   $0x804a118
+ 8049254:	e8 67 f5 ff ff       	call   80487c0 <puts@plt>
+ 8049259:	83 c4 10             	add    $0x10,%esp
+ 804925c:	eb b4                	jmp    8049212 <phase_defused+0x18>
+ 804925e:	83 ec 08             	sub    $0x8,%esp
+ 8049261:	68 f2 a1 04 08       	push   $0x804a1f2
+ 8049266:	8d 44 24 18          	lea    0x18(%esp),%eax
+ 804926a:	50                   	push   %eax
+ 804926b:	e8 36 fd ff ff       	call   8048fa6 <strings_not_equal>
+ 8049270:	83 c4 10             	add    $0x10,%esp
+ 8049273:	85 c0                	test   %eax,%eax
+ 8049275:	75 d5                	jne    804924c <phase_defused+0x52>
+ 8049277:	83 ec 0c             	sub    $0xc,%esp
+ 804927a:	68 b8 a0 04 08       	push   $0x804a0b8
+ 804927f:	e8 3c f5 ff ff       	call   80487c0 <puts@plt>
+ 8049284:	c7 04 24 e0 a0 04 08 	movl   $0x804a0e0,(%esp)
+ 804928b:	e8 30 f5 ff ff       	call   80487c0 <puts@plt>
+ 8049290:	e8 1b fc ff ff       	call   8048eb0 <secret_phase>
+ 8049295:	83 c4 10             	add    $0x10,%esp
+ 8049298:	eb b2                	jmp    804924c <phase_defused+0x52>
+ 804929a:	e8 f1 f4 ff ff       	call   8048790 <__stack_chk_fail@plt>
+ 
+ 
+ 08048e5f <fun7>:
+ 8048e5f:	53                   	push   %ebx
+ 8048e60:	83 ec 08             	sub    $0x8,%esp
+ 8048e63:	8b 54 24 10          	mov    0x10(%esp),%edx     ;804c088即push进去的第二个数
+ 8048e67:	8b 4c 24 14          	mov    0x14(%esp),%ecx	   ;输入的数字
+ 8048e6b:	85 d2                	test   %edx,%edx
+ 8048e6d:	74 3a                	je     8048ea9 <fun7+0x4a>
+ 8048e6f:	8b 1a                	mov    (%edx),%ebx
+ 8048e71:	39 cb                	cmp    %ecx,%ebx
+ 8048e73:	7f 21                	jg     8048e96 <fun7+0x37>
+ 8048e75:	b8 00 00 00 00       	mov    $0x0,%eax
+ 8048e7a:	39 cb                	cmp    %ecx,%ebx
+ 8048e7c:	74 13                	je     8048e91 <fun7+0x32>
+ 8048e7e:	83 ec 08             	sub    $0x8,%esp
+ 8048e81:	51                   	push   %ecx
+ 8048e82:	ff 72 08             	pushl  0x8(%edx)
+ 8048e85:	e8 d5 ff ff ff       	call   8048e5f <fun7>
+ 8048e8a:	83 c4 10             	add    $0x10,%esp
+ 8048e8d:	8d 44 00 01          	lea    0x1(%eax,%eax,1),%eax
+ 8048e91:	83 c4 08             	add    $0x8,%esp
+ 8048e94:	5b                   	pop    %ebx
+ 8048e95:	c3                   	ret    
+ 8048e96:	83 ec 08             	sub    $0x8,%esp
+ 8048e99:	51                   	push   %ecx
+ 8048e9a:	ff 72 04             	pushl  0x4(%edx)
+ 8048e9d:	e8 bd ff ff ff       	call   8048e5f <fun7>
+ 8048ea2:	83 c4 10             	add    $0x10,%esp
+ 8048ea5:	01 c0                	add    %eax,%eax
+ 8048ea7:	eb e8                	jmp    8048e91 <fun7+0x32>
+ 8048ea9:	b8 ff ff ff ff       	mov    $0xffffffff,%eax     ;最基础的情况
+ 8048eae:	eb e1                	jmp    8048e91 <fun7+0x32>
+
+08048eb0 <secret_phase>:
+ 8048eb0:	53                   	push   %ebx
+ 8048eb1:	83 ec 08             	sub    $0x8,%esp
+ 8048eb4:	e8 42 02 00 00       	call   80490fb <read_line>
+ 8048eb9:	83 ec 04             	sub    $0x4,%esp
+ 8048ebc:	6a 0a                	push   $0xa
+ 8048ebe:	6a 00                	push   $0x0
+ 8048ec0:	50                   	push   %eax
+ 8048ec1:	e8 ba f9 ff ff       	call   8048880 <strtol@plt>
+ 8048ec6:	89 c3                	mov    %eax,%ebx          ;eax存放输入的值
+ 8048ec8:	8d 40 ff             	lea    -0x1(%eax),%eax
+ 8048ecb:	83 c4 10             	add    $0x10,%esp
+ 8048ece:	3d e8 03 00 00       	cmp    $0x3e8,%eax
+ 8048ed3:	77 32                	ja     8048f07 <secret_phase+0x57>
+ 8048ed5:	83 ec 08             	sub    $0x8,%esp
+ 8048ed8:	53                   	push   %ebx
+ 8048ed9:	68 88 c0 04 08       	push   $0x804c088
+ 8048ede:	e8 7c ff ff ff       	call   8048e5f <fun7>
+ 8048ee3:	83 c4 10             	add    $0x10,%esp
+ 8048ee6:	83 f8 03             	cmp    $0x3,%eax
+ 8048ee9:	74 05                	je     8048ef0 <secret_phase+0x40>
+ 8048eeb:	e8 ab 01 00 00       	call   804909b <explode_bomb>
+ 8048ef0:	83 ec 0c             	sub    $0xc,%esp
+ 8048ef3:	68 dc 9f 04 08       	push   $0x8049fdc
+ 8048ef8:	e8 c3 f8 ff ff       	call   80487c0 <puts@plt>
+ 8048efd:	e8 f8 02 00 00       	call   80491fa <phase_defused>
+ 8048f02:	83 c4 18             	add    $0x18,%esp
+ 8048f05:	5b                   	pop    %ebx
+ 8048f06:	c3                   	ret    
+ 8048f07:	e8 8f 01 00 00       	call   804909b <explode_bomb>
+ 8048f0c:	eb c7                	jmp    8048ed5 <secret_phase+0x25>
