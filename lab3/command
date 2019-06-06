@@ -1,9 +1,12 @@
-./hex2raw  smoke_U201714512.txt smoke_U201714512-raw.txt 
+./hex2raw < smoke_U201714512.txt > smoke_U201714512_raw.txt 
 ./bufbomb -u U201714512  < smoke_U201714512_raw.txt
+
+./hex2raw < fizz_U201714512.txt > fizz_U201714512_raw.txt 
+./bufbomb -u U201714512  < fizz_U201714512_raw.txt
 
 run -u U201714557 < smoke_U201714512_raw.txt
 
-cat smoke_U201714512.txt | ./hex2raw | ./bufbomb –u U201714512
+cat smoke_U201714512.txt |./hex2raw |./bufbomb –u U201714512
 
 
 0x18f9b232
