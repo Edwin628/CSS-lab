@@ -10,6 +10,15 @@
 ./hex2raw < bomb_U201714512.txt > bomb_U201714512_raw.txt 
 ./bufbomb -u U201714512  < bomb_U201714512_raw.txt
 
+./hex2raw < nitro_U201714512.txt > nitro_U201714512_raw.txt 
+./bufbomb -n -u U201714512  < nitro_U201714512_raw.txt
+
+./hex2raw < nitro_U201514898.txt > nitro_U201514898_raw.txt
+./bufbomb -n -u U201514898  < nitro_U201514898_raw.txt
+
+r -n -u U201714512 < nitro_U201714512_raw.txt
+/*getbufn  x/2wx $ebp
+
 run -u U201714557 < smoke_U201714512_raw.txt
 
 cat smoke_U201714512.txt |./hex2raw |./bufbomb –u U201714512
@@ -17,6 +26,9 @@ cat smoke_U201714512.txt |./hex2raw |./bufbomb –u U201714512
 
 gcc -m32 -c bomb.s
 objdump -d bomb.o
+
+gcc -m32 -c nitro.s
+objdump -d nitro.o
 
 0x18f9b232
 
