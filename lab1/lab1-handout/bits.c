@@ -163,6 +163,10 @@ NOTES:
 /* wchar_t uses ISO/IEC 10646 (2nd ed., published 2011-03-15) /
    Unicode 6.0.  */
 /* We do not support C11 <threads.h>.  */
+
+
+
+
 /* 
  *   lsbZero - set 0 to the least significant bit of x 
  *   Example: lsbZero(0x87654321) = 0x87654320
@@ -170,10 +174,16 @@ NOTES:
  *   Max ops: 5
  *   Rating: 1
  */
+
 int lsbZero(int x) {
 	//因为左移时低位会补0，所以左移右移后能保证最低位一定为0
 	x=x>>1;
 	x=x<<1;
+  return x;
+}
+
+int byteNot(int x, int n) {
+	x=x^(1<<n);
   return x;
 }
 /* 
@@ -184,6 +194,7 @@ int lsbZero(int x) {
  *   Max ops: 6
  *   Rating: 2
  */
+/*
 int byteNot(int x, int n) {
 	//通过1的异或可以保证0变为1和1变为0
 	int m;
@@ -192,6 +203,15 @@ int byteNot(int x, int n) {
 	x=x^m;
   return x;
 }
+*/
+int byteXor(int x, int y, int n) {
+	n=n<<3;
+	x=(x>>n)&0xff;
+	y=(y>>n)&0xff;
+	
+  return !(!(x^y));
+}
+
 /* 
  *   byteXor - compare the nth byte of x and y, if it is same, return 0, if not, return 1
 
@@ -202,6 +222,8 @@ int byteNot(int x, int n) {
  *   Max ops: 20
  *   Rating: 2 
  */
+
+/*
 int byteXor(int x, int y, int n) {
 	//首先取到比较位置，然后通过两者的异或来实现比较，两个!实现将结果限制在
 	//0与1之间
@@ -216,17 +238,23 @@ int byteXor(int x, int y, int n) {
 	val=!(!(x^y)); 
   return val;
 }
+*/
+int logicalAnd(int x, int y) {
+  return !(!x)&!(!y);
+}
 /* 
  *   logicalAnd - x && y
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3 
  */
+/*
 int logicalAnd(int x, int y) {
 	//判断x与y是否有一个为0即可，通过!将其转化
 	int m=!(!x)&!(!y);
   return m;
 }
+*/
 /* 
  *   logicalOr - x || y
  *   Legal ops: ! ~ & ^ | + << >>
@@ -237,6 +265,7 @@ int logicalOr(int x, int y) {
 	//比较x与y各个位之间的或，如果结果不为0
 	//则说明其中必定有非零数
 	int val=!(!(x|y));
+	//int val=!(!x)|!(!y);
   return val;
 }
 /* 
@@ -247,6 +276,20 @@ int logicalOr(int x, int y) {
  *   Max ops: 25
  *   Rating: 3 
  */
+/*
+int rotateLeft(int x, int n) {
+	int temp=~0;
+	int nneg=~n+1;
+	int xhigh = x>>(32+nneg);
+	//temp=~temp;//this is crucial
+	temp = temp<<n;
+	xhigh = xhigh&(~temp);
+	//x = x&temp;
+	x = x<<n;
+	x = x|xhigh;
+  return x;
+}
+*/
 int rotateLeft(int x, int n) {
 	//通过mlow取待转移的高位地址，存至mhigh中
 	//然后将其通过移位至低位，再与原来的数转移后合并即可。
@@ -264,12 +307,28 @@ int rotateLeft(int x, int n) {
   return x;
 }
 /*
+int parityCheck(int x) {
+	int temp=x>>16;
+	x=temp^x;
+	temp=x>>8;
+	x=temp^x;
+	temp=x>>4;
+	x=temp^x;
+	temp=x>>2;
+	x=temp^x;
+	temp=x>>1;
+	x=temp^x;
+	x=x&1;
+  return x;
+}
+/*
  * parityCheck - returns 1 if x contains an odd number of 1's
  *   Examples: parityCheck(5) = 0, parityCheck(7) = 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 4
  */
+
 int parityCheck(int x) {
 	//将高位与低位反复比较，即可达到两个1就消为0的效果
 	int m=x;
@@ -290,6 +349,16 @@ int parityCheck(int x) {
 	m=m&1;	//can I use this way?
   return m;
 }
+
+
+int mul2OK(int x) {
+	//int temp=~0;
+	int xs,x2s;
+	//temp=~(temp<<1);
+	xs=(x>>31)&1;
+	x2s=(x>>30)&1;
+  return 1^(xs^x2s); //we cant use !,and ~ worked incorrectly too
+}
 /*
  * mul2OK - Determine if can compute 2*x without overflow
  *   Examples: mul2OK(0x30000000) = 1
@@ -299,6 +368,7 @@ int parityCheck(int x) {
  *   Max ops: 20
  *   Rating: 2
  */
+/*
 int mul2OK(int x) {
 	//m为x*2的结果，溢出的条件是m与x的符号位不同
 	int m; 
@@ -306,6 +376,14 @@ int mul2OK(int x) {
 	m=m>>31;
 	x=x>>31;
   return 0x1^(0x1&(m^x));
+}
+
+*/
+int mult3div2(int x) {
+	int m=x+(x<<1);//dont forget the column
+	m=m+(!(!(m>>31)));
+	m=m>>1;
+  return m;
 }
 /*
  * mult3div2 - multiplies by 3/2 rounding toward 0,
@@ -318,6 +396,7 @@ int mul2OK(int x) {
  *   Max ops: 12
  *   Rating: 2
  */
+/*
 int mult3div2(int x) {
 	//因为向零取整，根据m的符号位来进行加一操作
 	int m;
@@ -326,6 +405,17 @@ int mult3div2(int x) {
 	m=m>>1;
   return m;
 }
+*/
+int subOK(int x, int y) {
+	int m=~y+1;
+	int ms=((~y)>>31)&1;//use ~y to replace m crucial
+	int xs=(x>>31)&1;
+	int sums;
+	m=x+m;
+	sums=(m>>31)&1;
+  return !(!(ms^xs)&(sums^ms));
+}
+
 /* 
  * subOK - Determine if can compute x-y without overflow
  *   Example: subOK(0x80000000,0x80000000) = 1,
@@ -334,15 +424,6 @@ int mult3div2(int x) {
  *   Max ops: 20
  *   Rating: 3
  */
-int subOK(int x, int y) {
-	//x与y符号位不同并且x与（x-y）符号位不同时则溢出
-	int m,dec,yneg;	
-	yneg=~y+1;
-	m=x+yneg;
-	x=!(!(x>>31));
-	y=!(!(y>>31));
-	m=!(!(m>>31));
-	dec=(x^y) & (x^m); //This one work incorrectly in 64bit Linux
 /*
 	int m,yneg,dec;	
 	yneg=~y+1;
@@ -352,7 +433,25 @@ int subOK(int x, int y) {
 	m=!(!(m>>31));
 	dec=!(!(x^y) & ((x^m)|(y^m))); 
 */
+/*
+int subOK(int x, int y) {
+	//x与y符号位不同并且x与（x-y）符号位不同时则溢出
+	int m,dec,yneg;	
+	yneg=~y+1;
+	m=x+yneg;
+	x=!(!(x>>31));
+	y=!(!(y>>31));
+	m=!(!(m>>31));
+	dec=(x^y) & (x^m); //This one work incorrectly in 64bit Linux
+
   return !dec;
+}
+*/
+int absVal(int x) {
+	//int s=!(!(x>>31));
+	int s=x>>31;	
+	x=(x&(~s))+((~x+1)&s); //column is crucial
+  return x;
 }
 /* 
  * absVal - absolute value of x
@@ -362,11 +461,19 @@ int subOK(int x, int y) {
  *   Max ops: 10
  *   Rating: 4
  */
+/*
 int absVal(int x) {
 	//通过截取最高位来判断正负的操作
 	int m=x>>31;
 	int xabs = ((~m)&x)+(m&(~x+1));//pay attention to the brackets
   return xabs;  //test this one in 32 bit machine
+}
+
+*/
+unsigned float_abs(unsigned uf) {
+	unsigned abv=uf&0x7fffffff;
+	if(abv>(0x7f800000)) return uf;
+	else return abv;
 }
 /* 
  * float_abs - Return bit-level equivalent of absolute value of f for
@@ -379,6 +486,7 @@ int absVal(int x) {
  *   Max ops: 10
  *   Rating: 2
  */
+/*
 unsigned float_abs(unsigned uf) {
 	//最高位为符号位全部置零，超出范围则返回原值
 	unsigned m=~(1<<31);
@@ -386,6 +494,26 @@ unsigned float_abs(unsigned uf) {
 	if(m>0x7f800000) return uf;
 	else
   return m;
+}
+*/
+int float_f2i(unsigned uf) {
+	unsigned s = uf>>31;
+	//must use int not unsigned, because there is comapre 
+	int jiema = ((uf&(0x7f800000))>>23)-127;
+	int weima = (uf&(0x007fffff))+(0x00800000);
+	if(jiema<0) return 0;
+	if (jiema>31) return 0x80000000;//we should consider the range of int
+	//30and31 both pass, standard is 31
+	if(s==0){
+		if(jiema<=23)
+		return weima>>(23-jiema);
+		else return weima<<(jiema-23);	
+	}
+	else{
+		if(jiema<=23)
+		return (~(weima>>(23-jiema))+1);
+		else return (~(weima<<(jiema-23))+1);	
+	}
 }
 /* 
  * float_f2i - Return bit-level equivalent of expression (int) f
@@ -399,6 +527,7 @@ unsigned float_abs(unsigned uf) {
  *   Max ops: 30
  *   Rating: 4
  */
+/*
 int float_f2i(unsigned uf) {
 	//当阶码超出范围或者小于127则直接判定返回值
 	//然后因为表示时已经默认为右移了23位，所以通过比较150来
@@ -425,3 +554,4 @@ int float_f2i(unsigned uf) {
 
   return m;
 }
+*/
